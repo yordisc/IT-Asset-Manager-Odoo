@@ -12,19 +12,28 @@ class ItAssetAssignment(models.Model):
         string='Activo',
         required=True,
         ondelete='cascade',
+        help='Activo que se está asignando.',
     )
     employee_id = fields.Many2one(
         comodel_name='hr.employee',
         string='Empleado',
         required=True,
+        help='Empleado al que se asigna el activo.',
     )
     assigned_date = fields.Date(
         string='Fecha de asignación',
         default=fields.Date.context_today,
         required=True,
+        help='Fecha en que se realizó la asignación.',
     )
-    returned_date = fields.Date(string='Fecha de devolución')
-    notes = fields.Text(string='Notas')
+    returned_date = fields.Date(
+        string='Fecha de devolución',
+        help='Fecha en que se devolvió el activo. Dejar vacío si aún está asignado.',
+    )
+    notes = fields.Text(
+        string='Notas',
+        help='Notas adicionales sobre esta asignación (motivo, observaciones, etc.).',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

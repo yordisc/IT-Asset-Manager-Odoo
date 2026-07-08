@@ -9,7 +9,11 @@ class ItAsset(models.Model):
     _description = 'Activo IT'
     _order = 'name'
 
-    name = fields.Char(string='Nombre', required=True)
+    name = fields.Char(
+        string='Nombre',
+        required=True,
+        help='Nombre descriptivo del activo (ej: Laptop Dell XPS 13).',
+    )
     asset_type = fields.Selection(
         selection=[
             ('laptop', 'Laptop'),
@@ -21,17 +25,29 @@ class ItAsset(models.Model):
         string='Tipo de activo',
         default='otro',
         required=True,
+        help='Categoría de tipo del activo. Selecciona el más apropiado.',
     )
-    serial_number = fields.Char(string='Número de serie')
+    serial_number = fields.Char(
+        string='Número de serie',
+        help='Número de serie del fabricante para identificación única.',
+    )
     category_id = fields.Many2one(
         comodel_name='it.asset.category',
         string='Categoría',
+        help='Categoría a la que pertenece este activo.',
     )
-    purchase_date = fields.Date(string='Fecha de compra')
-    warranty_end_date = fields.Date(string='Fin de garantía')
+    purchase_date = fields.Date(
+        string='Fecha de compra',
+        help='Fecha en que se adquirió el activo.',
+    )
+    warranty_end_date = fields.Date(
+        string='Fin de garantía',
+        help='Fecha en que expira la garantía del fabricante.',
+    )
     warranty_expiring_soon = fields.Boolean(
         string='Garantía por vencer',
         compute='_compute_warranty_expiring_soon',
+        help='Se marca como verdadero si la garantía vence en los próximos 30 días.',
     )
     state = fields.Selection(
         selection=[
@@ -43,17 +59,20 @@ class ItAsset(models.Model):
         string='Estado',
         default='disponible',
         required=True,
+        help='Estado actual del activo: Disponible para asignar, Asignado a un empleado, En mantenimiento o Dado de baja.',
     )
     assignment_ids = fields.One2many(
         comodel_name='it.asset.assignment',
         inverse_name='asset_id',
         string='Historial de asignaciones',
+        help='Registro histórico de todas las asignaciones de este activo.',
     )
     current_employee_id = fields.Many2one(
         comodel_name='hr.employee',
         string='Empleado actual',
         compute='_compute_current_employee_id',
         store=True,
+        help='Empleado que tiene asignado este activo actualmente.',
     )
 
     def _get_open_assignment(self):

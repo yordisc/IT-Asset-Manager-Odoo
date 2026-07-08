@@ -6,5 +6,13 @@ class ItAssetCategory(models.Model):
     _description = 'Categoría de activo IT'
     _order = 'name'
 
-    name = fields.Char(string='Nombre', required=True)
-    code = fields.Char(string='Código', required=True)
+    name = fields.Char(
+        string='Nombre',
+        required=True,
+        help='Nombre descriptivo de la categoría (ej: Laptops, Monitores).',
+    )
+    code = fields.Char(
+        string='Código',
+        required=True,
+        help='Código único de identificación (ej: LTP, MON).',
+    )
