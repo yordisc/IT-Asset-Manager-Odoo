@@ -1,19 +1,23 @@
 services:
   db:
     image: postgres:15
-    # Se eliminó "restart: unless-stopped"
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   odoo:
     image: odoo:17
-    # Se eliminó "restart: unless-stopped"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8069:8069"
     environment:
@@ -25,8 +29,16 @@ services:
       - ./addons:/mnt/extra-addons
       - ./config:/etc/odoo
       - odoo-web-data:/var/lib/odoo
+      - odoo-logs:/var/log/odoo
     command: ["odoo", "-c", "/etc/odoo/odoo.conf"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8069 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 volumes:
   odoo-db-data:
   odoo-web-data:
+  odoo-logs:

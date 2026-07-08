@@ -5,5 +5,32 @@
   "workspaceFolder": "/workspaces/IT-Asset-Manager-Odoo",
   "forwardPorts": [8069, 5432],
   "remoteUser": "root",
-  "postCreateCommand": "bash -lc 'command -v git >/dev/null 2>&1 || (apt-get update && apt-get install -y git); echo \"Entorno listo. Odoo disponible en el puerto 8069.\"'"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "odoo.es",
+        "charliermarsh.ruff",
+        "ms-vscode.makefile-tools",
+        "eamodio.gitlens",
+        "GitHub.copilot"
+      ],
+      "settings": {
+        "python.formatting.provider": "black",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.python",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  },
+  "postCreateCommand": "bash -lc 'apt-get update && apt-get install -y git vim nano tmux && git config --global user.name \"IT Asset Manager\" && git config --global user.email \"dev@it-assets.local\" && echo && echo === IT Asset Manager - Odoo 17 Dev Environment === && echo && echo [OK] Git, vim, nano, tmux instalados && echo [OK] Extensiones VS Code: Python, Ruff, Odoo, GitLens && echo [OK] Git configurado: user.name=\"IT Asset Manager\" && echo && echo Servicios disponibles: && echo \"  - Odoo 17: http://localhost:8069\" && echo \"  - PostgreSQL 15: localhost:5432\" && echo && echo Modulo: addons/it_assets_manager && echo Plan: Ver PLAN_DE_DESARROLLO.md && echo && echo Nota: La BD se crea automaticamente en primer arranque && echo'",
+  "remoteEnv": {
+    "PYTHONUNBUFFERED": "1"
+  }
 }
