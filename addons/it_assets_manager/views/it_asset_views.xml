@@ -1,0 +1,188 @@
+<odoo>
+    <record id="view_it_asset_tree" model="ir.ui.view">
+        <field name="name">it.asset.tree</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Activos IT">
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="serial_number"/>
+                <field name="category_id"/>
+                <field name="current_employee_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_asset_kanban" model="ir.ui.view">
+        <field name="name">it.asset.kanban</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="serial_number"/>
+                <field name="category_id"/>
+                <field name="current_employee_id"/>
+                <field name="state"/>
+                <field name="warranty_expiring_soon"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_record_top">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div><field name="asset_type"/></div>
+                                <div><field name="serial_number"/></div>
+                                <div><field name="category_id"/></div>
+                                <div><field name="warranty_expiring_soon"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_it_asset_form" model="ir.ui.view">
+        <field name="name">it.asset.form</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <form string="Activo IT">
+                <header>
+                    <button name="action_assign" type="object" string="Asignar" class="btn-primary" groups="it_assets_manager.group_it_asset_manager_technician"/>
+                    <button name="action_return" type="object" string="Devolver" groups="it_assets_manager.group_it_asset_manager_technician"/>
+                    <button name="action_send_maintenance" type="object" string="Mantenimiento" groups="it_assets_manager.group_it_asset_manager_technician"/>
+                    <button name="action_retire" type="object" string="Dar de baja" groups="it_assets_manager.group_it_asset_manager_technician"/>
+                    <field name="state" widget="statusbar" statusbar_visible="disponible,asignado,mantenimiento,baja"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="asset_type"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="serial_number"/>
+                            <field name="purchase_date"/>
+                            <field name="warranty_end_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Historial">
+                            <field name="assignment_ids" readonly="1">
+                                <tree>
+                                    <field name="employee_id"/>
+                                    <field name="assigned_date"/>
+                                    <field name="returned_date"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_asset_search" model="ir.ui.view">
+        <field name="name">it.asset.search</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <search string="Buscar activos IT">
+                <field name="name"/>
+                <field name="serial_number"/>
+                <field name="category_id"/>
+                <filter name="group_by_state" string="Agrupar por estado" context="{'group_by': 'state'}"/>
+                <filter name="filter_warranty_expiring_soon" string="Por vencer garantía" domain="[('warranty_expiring_soon', '=', True)]"/>
+                <filter name="filter_state_maintenance" string="En mantenimiento" domain="[('state', '=', 'mantenimiento')]"/>
+                <filter name="filter_state_available" string="Sin asignar" domain="[('state', '=', 'disponible')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_asset" model="ir.actions.act_window">
+        <field name="name">Activos</field>
+        <field name="res_model">it.asset</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_it_asset_search"/>
+        <field name="context">{'search_default_group_by_state': 1}</field>
+    </record>
+
+    <record id="view_it_asset_category_tree" model="ir.ui.view">
+        <field name="name">it.asset.category.tree</field>
+        <field name="model">it.asset.category</field>
+        <field name="arch" type="xml">
+            <tree string="Categorías de activos">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_asset_category_form" model="ir.ui.view">
+        <field name="name">it.asset.category.form</field>
+        <field name="model">it.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoría de activo">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_asset_category" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">it.asset.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_it_asset_assignment_tree" model="ir.ui.view">
+        <field name="name">it.asset.assignment.tree</field>
+        <field name="model">it.asset.assignment</field>
+        <field name="arch" type="xml">
+            <tree string="Asignaciones de activos">
+                <field name="asset_id"/>
+                <field name="employee_id"/>
+                <field name="assigned_date"/>
+                <field name="returned_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_asset_assignment_form" model="ir.ui.view">
+        <field name="name">it.asset.assignment.form</field>
+        <field name="model">it.asset.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Asignación de activo">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="asset_id" readonly="1"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="assigned_date"/>
+                            <field name="returned_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_asset_assignment" model="ir.actions.act_window">
+        <field name="name">Asignaciones</field>
+        <field name="res_model">it.asset.assignment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

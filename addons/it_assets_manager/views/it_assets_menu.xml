@@ -1,0 +1,9 @@
+<odoo>
+    <menuitem id="menu_it_assets_root" name="IT Assets" sequence="10"/>
+
+    <menuitem id="menu_it_assets_assets" name="Activos" parent="menu_it_assets_root" action="action_it_asset" sequence="10"/>
+
+    <menuitem id="menu_it_assets_reports" name="Análisis" parent="menu_it_assets_root" action="action_it_asset_report" sequence="15" groups="it_assets_manager.group_it_asset_manager_technician"/>
+
+    <menuitem id="menu_it_assets_categories" name="Categorías" parent="menu_it_assets_root" action="action_it_asset_category" sequence="20" groups="it_assets_manager.group_it_asset_manager_technician"/>
+</odoo>

@@ -1,0 +1,20 @@
+{
+    'name': 'IT Assets Manager',
+    'version': '17.0.1.0.0',
+    'summary': 'Gestión básica de activos IT',
+    'description': 'Módulo para gestionar activos IT, categorías y su ciclo de vida básico.',
+    'category': 'Tools',
+    'author': 'Copilot',
+    'license': 'LGPL-3',
+    'depends': ['base', 'hr'],
+    'data': [
+        'security/security_groups.xml',
+        'security/ir.model.access.csv',
+        'views/it_asset_views.xml',
+        'views/it_assets_menu.xml',
+        'report/it_asset_report_views.xml',
+        'data/demo_data.xml',
+    ],
+    'application': True,
+    'installable': True,
+}

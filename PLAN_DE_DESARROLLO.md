@@ -4,12 +4,12 @@ Este documento concentra la parte operativa del proyecto. El README principal qu
 
 ## 1. Orden recomendado
 
-1. Crear la estructura base del módulo.
-2. Hacer que el modelo de activos funcione sin lógica compleja.
-3. Agregar asignaciones e historial de uso.
-4. Incorporar seguridad y reglas de acceso.
-5. Añadir vistas de análisis y reporte.
-6. Completar con datos demo, tests y documentación.
+1. Crear la estructura base del módulo. [x]
+2. Hacer que el modelo de activos funcione sin lógica compleja. [x]
+3. Agregar asignaciones e historial de uso. [x]
+4. Incorporar seguridad y reglas de acceso. [ ]
+5. Añadir vistas de análisis y reporte. [ ]
+6. Completar con datos demo, tests y documentación. [ ]
 
 ## 2. Día 1 - Esqueleto del módulo
 
@@ -29,6 +29,10 @@ Este documento concentra la parte operativa del proyecto. El README principal qu
 - Crear menú principal y submenú para `Activos` y `Categorías`.
 - Crear `ir.model.access.csv` mínimo.
 - Confirmar que el módulo se instala sin errores antes de seguir.
+
+### Estado
+
+- Completado.
 
 ### Checkpoint
 
@@ -51,17 +55,25 @@ Poder crear un activo a mano desde la interfaz sin errores.
 - Agregar validaciones básicas con `@api.constrains`.
 - Agregar mensajes de error claros para que el usuario entienda qué pasó.
 
+### Estado
+
+- Completado.
+
 ### Checkpoint
 
 Flujo completo Disponible -> Asignado -> Mantenimiento -> Baja funcionando desde la UI.
 
 ## 4. Día 3 - Seguridad y vistas
 
-- Crear `security_groups.xml` con dos grupos: `Técnico IT` y `Empleado`.
-- Crear reglas de registro para que un `Empleado` solo vea sus activos asignados.
-- Crear vista Kanban agrupada por `state`.
-- Crear filtros guardados: `Por vencer garantía`, `En mantenimiento`, `Sin asignar`.
-- Verificar qué grupo puede editar y cuál solo puede leer antes de cerrar el módulo.
+- Crear `security_groups.xml` con dos grupos: `Técnico IT` y `Empleado`. [x]
+- Crear reglas de registro para que un `Empleado` solo vea sus activos asignados. [x]
+- Crear vista Kanban agrupada por `state`. [x]
+- Crear filtros guardados: `Por vencer garantía`, `En mantenimiento`, `Sin asignar`. [x]
+- Verificar qué grupo puede editar y cuál solo puede leer antes de cerrar el módulo. [x]
+
+### Estado
+
+- Completado.
 
 ### Checkpoint
 
@@ -69,15 +81,19 @@ Loguearse con un usuario de prueba del grupo `Empleado` y confirmar que solo ve 
 
 ## 5. Día 4 - Reportes, demo data y documentación
 
-- Crear una vista de reporte simple con `graph` y `pivot`.
-- Crear `demo_data.xml` con 12-15 activos variados y 3-4 empleados de ejemplo.
-- Agregar capturas de pantalla para el README.
-- Revisar textos y ayudas de campo con `help=`.
-- Dejar una versión de demo que pueda mostrarse en 5 minutos.
+- Crear una vista de reporte simple con `graph` y `pivot`. [x]
+- Crear `demo_data.xml` con 12-15 activos variados y 3-4 empleados de ejemplo. [x]
+- Agregar capturas de pantalla para el README. [ ]
+- Revisar textos y ayudas de campo con `help=`. [ ]
+- Dejar una versión de demo que pueda mostrarse en 5 minutos. [ ]
 
 ### Checkpoint
 
 El módulo se ve terminado para una demo corta.
+
+### Estado
+
+- Parcialmente completado.
 
 ## 6. Tests a realizar
 

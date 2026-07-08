@@ -5,5 +5,5 @@
   "workspaceFolder": "/workspaces/IT-Asset-Manager-Odoo",
   "forwardPorts": [8069, 5432],
   "remoteUser": "root",
-  "postCreateCommand": "echo 'Entorno listo. Odoo disponible en el puerto 8069.'"
+  "postCreateCommand": "bash -lc 'command -v git >/dev/null 2>&1 || (apt-get update && apt-get install -y git); echo \"Entorno listo. Odoo disponible en el puerto 8069.\"'"
 }

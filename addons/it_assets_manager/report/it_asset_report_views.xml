@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_it_asset_report_graph" model="ir.ui.view">
+        <field name="name">it.asset.report.graph</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <graph string="Activos por estado" type="bar">
+                <field name="state" type="row"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_it_asset_report_pivot" model="ir.ui.view">
+        <field name="name">it.asset.report.pivot</field>
+        <field name="model">it.asset</field>
+        <field name="arch" type="xml">
+            <pivot string="Activos IT">
+                <field name="state" type="row"/>
+                <field name="asset_type" type="col"/>
+                <field name="id" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_it_asset_report" model="ir.actions.act_window">
+        <field name="name">Análisis</field>
+        <field name="res_model">it.asset</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id" ref="view_it_asset_report_graph"/>
+    </record>
+</odoo>
