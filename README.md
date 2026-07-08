@@ -1,154 +1,244 @@
-# IT Asset Manager — Módulo custom para Odoo
+# 🖥️ IT Asset Manager para Odoo 17
 
-Proyecto de portafolio: módulo de gestión de activos IT (laptops, monitores,
-licencias) construido desde cero sobre Odoo 17, pensado para demostrar
-competencias de análisis de sistemas: modelado de datos, flujos de estado,
-seguridad por roles, reportes y buenas prácticas de desarrollo.
+> **Módulo profesional de gestión de activos informáticos** | Proyecto de portafolio
 
-## Objetivo del proyecto
+Gestiona el ciclo de vida completo de activos IT (laptops, monitores, licencias) con asignación a empleados, tracking de garantía, reportes analíticos y seguridad basada en roles.
 
-Mostrar en una entrevista técnica (rol: Analista de Sistemas):
-- Capacidad de modelar un dominio de negocio en un ERP real.
-- Entendimiento de flujos de trabajo (estados, transiciones, validaciones).
-- Nociones de seguridad (grupos, reglas de acceso).
-- Capacidad de documentar y testear lo que se construye.
+## ✨ Características Principales
 
-## Alcance del README
+| Característica | Descripción |
+|---|---|
+| **Gestión de Activos** | Crear, categorizar y dar seguimiento a todos los activos de IT |
+| **Flujo de Estados** | Disponible → Asignado → Mantenimiento → Baja |
+| **Asignación a Empleados** | Registrar asignaciones con historial completo |
+| **Seguimiento de Garantía** | Alertas automáticas cuando la garantía está por vencer |
+| **Control de Acceso** | Dos roles: Técnico (acceso total) y Empleado (solo propios activos) |
+| **Reportes Analíticos** | Vistas de gráficos y pivotes por estado y tipo |
+| **Demo Data Integrada** | 5 activos + 4 empleados + 3 asignaciones de ejemplo |
+| **Suite de Tests** | 6 casos de prueba unitarios incluidos |
 
-Este archivo se usará como mapa de construcción del proyecto. La idea es que
-cada sección responda a una pregunta concreta: qué se necesita, qué se va a
-crear, en qué orden hacerlo y cómo validar que quedó bien.
+## 🚀 Quick Start
 
-## Estado actual del repositorio
+### Prerequisitos
+- Docker & Docker Compose
+- O: GitHub Codespaces (recomendado)
 
-En este punto el repo solo tiene la base de infraestructura para Codespaces y
-Odoo:
-- `.devcontainer/devcontainer.json`
-- `docker-compose.yml`
-- `config/odoo.conf`
-- `addons/` como carpeta destino para los módulos custom
+### Instalación
 
-Todavía no existe el módulo `it_assets_manager`; este README describe cómo lo
-vamos a construir paso a paso.
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/yordisc/IT-Asset-Manager-Odoo.git
+   cd IT-Asset-Manager-Odoo
+   ```
 
-## Stack
+2. **Iniciar los servicios**
+   ```bash
+   docker compose up -d
+   ```
 
-- Odoo 17 (Community)
-- PostgreSQL 15
-- Docker / Docker Compose
-- GitHub Codespaces como entorno de desarrollo
-- Python 3.10+ (el que trae la imagen de Odoo)
+3. **Acceder a Odoo**
+   - 🌐 URL: http://localhost:8069
+   - 📧 Usuario: `admin`
+   - 🔑 Contraseña: `admin`
 
-## Requisitos previos
+4. **Instalar el módulo**
+   - Activar el Modo de Desarrollador (esquina superior derecha)
+   - Ir a: Apps → Búsqueda: "IT Assets Manager"
+   - Clic en Instalar
 
-- Tener acceso a GitHub Codespaces o, en su defecto, Docker y Docker Compose
-  instalados localmente.
-- Usar una base de datos nueva para el proyecto para evitar mezclar datos de
-  pruebas con datos reales.
-- Tener claro que Odoo 17 Community será la plataforma base de desarrollo.
+### Demo en 5 Minutos
+
+**Como Técnico IT:**
+1. Crear un nuevo activo (Laptops)
+2. Asignarlo a un empleado
+3. Verificar cambio de estado a "Asignado"
+4. Devolver el activo y confirmación de cambio a "Disponible"
+
+**Como Empleado:**
+1. Cambiar usuario a: `empleado1.demo@example.com` / `admin`
+2. Observar que **solo ve sus activos asignados** (regla de seguridad activa)
+3. Ver detalles en la vista Kanban agrupada por estado
+
+**Consultar Reportes:**
+1. Ir a: Análisis → Gráfico de Activos
+2. Ver distribución de estados en gráfico de barras
+3. Cambiar a vista Pivote para matriz Estado × Tipo
 
 ---
 
-## 1. Entorno Docker en Codespace
-
-### 1.1 Estructura de carpetas del repo
+## 📊 Estructura del Proyecto
 
 ```
-IT-Asset-Manager-Odoo/
+.
 ├── .devcontainer/
-│   └── devcontainer.json
-├── docker-compose.yml
+│   └── devcontainer.json           # Config para GitHub Codespaces
+├── docker-compose.yml              # Orchestración PostgreSQL + Odoo 17
 ├── config/
-│   └── odoo.conf
+│   └── odoo.conf                   # Configuración de Odoo
 ├── addons/
-│   └── it_assets_manager/        <- nuestro módulo custom
+│   └── it_assets_manager/          # 🎯 MÓDULO PRINCIPAL
 │       ├── __init__.py
-│       ├── __manifest__.py
-│       ├── models/
-│       │   ├── __init__.py
-│       │   ├── it_asset.py
-│       │   ├── it_asset_assignment.py
-│       │   └── it_asset_category.py
-│       ├── views/
-│       │   ├── it_asset_views.xml
-│       │   ├── it_asset_assignment_views.xml
-│       │   └── it_assets_menu.xml
-│       ├── security/
-│       │   ├── ir.model.access.csv
-│       │   └── security_groups.xml
+│       ├── __manifest__.py          # Metadatos del módulo
+│       ├── models/                  # Lógica de negocio (ORM)
+│       │   ├── it_asset.py         # Modelo principal de activos
+│       │   ├── it_asset_category.py# Categorización
+│       │   └── it_asset_assignment.py# Asignaciones y historial
+│       ├── views/                   # Interfaces de usuario
+│       │   ├── it_asset_views.xml  # Vistas Kanban, Tree, Form
+│       │   └── it_assets_menu.xml  # Menú de navegación
+│       ├── security/                # Control de acceso
+│       │   ├── security_groups.xml # Definición de roles
+│       │   └── ir.model.access.csv # Matriz de permisos
 │       ├── data/
-│       │   └── demo_data.xml
+│       │   └── demo_data.xml       # Datos de demostración
 │       ├── report/
-│       │   └── it_asset_dashboard_views.xml
+│       │   └── it_asset_report_views.xml# Gráficos y pivotes
 │       └── tests/
-│           ├── __init__.py
-│           └── test_it_asset.py
-└── README.md
+│           └── test_it_asset.py    # 6 casos de prueba unitarios
+├── README.md
+└── PLAN_DE_DESARROLLO.md
 ```
 
-### 1.2 Cómo leer esta estructura
+---
 
-- `.devcontainer/` define cómo se abrirá el proyecto en Codespaces.
-- `docker-compose.yml` levanta PostgreSQL y Odoo.
-- `config/odoo.conf` define la configuración mínima de Odoo.
-- `addons/` contendrá todos los módulos personalizados del proyecto.
-- `README.md` funcionará como guía de implementación y validación.
+## 🏗️ Modelos de Datos
 
-### 1.3 `docker-compose.yml`
+### it.asset (Activo)
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `name` | Char | Nombre único del activo |
+| `asset_type` | Selection | Laptop, Monitor, Licencia, Periférico, Otro |
+| `serial_number` | Char | Número de serie |
+| `category_id` | M2O | Categoría del activo |
+| `purchase_date` | Date | Fecha de compra |
+| `warranty_end_date` | Date | Fecha de vencimiento de garantía |
+| `state` | Selection | disponible, asignado, mantenimiento, baja |
+| `current_employee_id` | computed | Empleado actual (desde asignación abierta) |
+| `assignment_ids` | O2M | Historial de asignaciones |
 
-```yaml
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
-      POSTGRES_DB: postgres
-    volumes:
-      - odoo-db-data:/var/lib/postgresql/data
+### it.asset.assignment (Asignación)
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `asset_id` | M2O | Referencia al activo |
+| `employee_id` | M2O | Empleado asignado |
+| `assigned_date` | Date | Fecha de asignación |
+| `returned_date` | Date | Fecha de devolución (si aplica) |
+| `notes` | Text | Notas adicionales |
 
-  odoo:
-    image: odoo:17
-    depends_on:
-      - db
-    ports:
-      - "8069:8069"
-    environment:
-      HOST: db
-      USER: odoo
-      PASSWORD: odoo
-    volumes:
-      - ./addons:/mnt/extra-addons
-      - ./config:/etc/odoo
-      - odoo-web-data:/var/lib/odoo
+### it.asset.category (Categoría)
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `name` | Char | Nombre de la categoría |
+| `code` | Char | Código único |
 
-volumes:
-  odoo-db-data:
-  odoo-web-data:
+---
+
+## 👥 Control de Acceso
+
+### Grupos de Seguridad
+
+| Grupo | Permisos | Vistas |
+|---|---|---|
+| **Técnico IT** | Lectura/Escritura/Borrado total | Todos los activos |
+| **Empleado** | Solo lectura de propios activos | Via `current_employee_id` |
+
+### Reglas de Acceso
+- Un empleado solo ve activos donde `current_employee_id.user_id = usuario actual`
+- Botones de acción (Asignar, Devolver, etc.) solo visibles para Técnico
+
+---
+
+## 📝 Casos de Prueba
+
+Se incluyen **6 tests unitarios** con `TransactionCase`:
+
+1. ✅ Crear activo con estado "disponible" por defecto
+2. ✅ Asignar exitosamente a empleado
+3. ✅ Rechazar doble asignación
+4. ✅ Devolver activo y revertir a "disponible"
+5. ✅ Rechazar baja con asignación activa
+6. ✅ Validar historial de asignaciones múltiples
+
+**Ejecutar tests:**
+```bash
+docker compose exec odoo odoo -d it_assets_demo --test-enable --stop-after-init -i it_assets_manager
 ```
 
-### 1.4 `config/odoo.conf`
+---
 
-```ini
-[options]
-addons_path = /mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons
-db_host = db
-db_user = odoo
-db_password = odoo
+## 📋 Stack Técnico
+
+| Componente | Versión | Propósito |
+|---|---|---|
+| Odoo | 17 (Community) | Framework ERP |
+| PostgreSQL | 15 | Base de datos |
+| Python | 3.10+ | Lenguaje de desarrollo |
+| Docker | Latest | Containerización |
+| Git | 2.34+ | Control de versiones |
+
+---
+
+## 📂 Datos de Demostración
+
+### Usuarios Pre-configurados
+```
+Técnico:    tecnico.demo@example.com / admin
+Empleado 1: empleado1.demo@example.com / admin
+Empleado 2: empleado2.demo@example.com / admin
+Empleado 3: empleado3.demo@example.com / admin
 ```
 
-### 1.5 `.devcontainer/devcontainer.json`
+### Activos de Ejemplo
+- 5 activos con diferentes estados
+- Distribuidos entre 3 empleados
+- 3 asignaciones con historial completo
 
-```json
-{
-  "name": "Odoo IT Assets Dev",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "odoo",
-  "workspaceFolder": "/mnt/extra-addons",
-  "forwardPorts": [8069, 5432],
-  "postCreateCommand": "echo 'Entorno listo. Odoo en el puerto 8069'"
-}
+---
+
+## 🔧 Desarrollo Local (Sin Codespaces)
+
+```bash
+# 1. Clonar
+git clone <repo>
+cd IT-Asset-Manager-Odoo
+
+# 2. Levantar servicios
+docker compose up -d
+
+# 3. Ver logs de Odoo
+docker compose logs -f odoo
+
+# 4. Esperar health check (1-2 min)
+docker compose ps  # Esperar hasta que ambos servicios estén "healthy"
+
+# 5. Acceder
+# http://localhost:8069
 ```
+
+---
+
+## 🎓 Propósito Educativo
+
+Este módulo demuestra:
+- ✅ Modelado de datos en ERP (ORM)
+- ✅ Máquinas de estado (flujos de negocio)
+- ✅ Seguridad basada en roles
+- ✅ Validaciones y constraints
+- ✅ Vistas (Kanban, Tree, Form, Pivot, Graph)
+- ✅ Buenas prácticas de testing
+- ✅ Documentación código
+
+**Ideal para:** Entrevistas técnicas, portafolio, aprendizaje de Odoo
+
+---
+
+## 📞 Soporte
+
+Para más detalles técnicos, consultar [PLAN_DE_DESARROLLO.md](PLAN_DE_DESARROLLO.md)
+
+---
+
+**Versión:** 17.0.1.0.0 | **Estado:** ✅ Completado | **Última actualización:** Julio 2026
 
 ### 1.6 Levantar el entorno
 
@@ -193,8 +283,38 @@ docker compose up -d
 # crear base de datos -> instalar módulo "IT Assets Manager"
 ```
 
-## 4. Siguiente decisión técnica
+## 4. Demostración rápida (5 minutos)
 
-Antes de empezar a programar el módulo, conviene decidir si la primera entrega
-va a incluir solo la capa funcional mínima o si también dejaremos listas desde
-el inicio las vistas Kanban y de reporte.
+### 4.1 Acceder a la aplicación
+
+1. Abrir `http://localhost:8069` (puerto expuesto en Codespaces).
+2. Login con credenciales de demo:
+   - **Técnico IT**: usuario: `tecnico.demo@example.com` | contraseña: `admin`
+   - **Empleado**: usuario: `empleado1.demo@example.com` | contraseña: `admin`
+3. Ir a **IT Assets** desde el menú principal.
+
+### 4.2 Flujo rápido como Técnico
+
+1. **Ver dashboard**: Click en **Análisis** para ver gráficos de activos por estado.
+2. **Crear un activo** (opcional): **Activos** → Nuevo → Rellenar datos → Guardar.
+3. **Asignar**: Abrir un activo disponible → Click en **Asignar** → Seleccionar empleado → Guardar.
+4. **Devolver**: Abrir el activo asignado → Click en **Devolver** → El activo vuelve a Disponible.
+5. **Filtros**: Probar filtros como "Por vencer garantía" o "En mantenimiento".
+
+### 4.3 Vista como Empleado
+
+1. Loguearse como empleado.
+2. Ver solo los activos asignados a ese usuario.
+3. No puede realizar acciones de gestión (botones ocultos).
+
+## 5. Datos de demo precargados
+
+- **Usuarios**: tecnico.demo@example.com, empleado1.demo@example.com, empleado2.demo@example.com, empleado3.demo@example.com
+- **Activos**: 5 activos variados (laptops, monitores, licencias)
+- **Asignaciones**: 3 registros de ejemplo con historial completo
+- **Categorías**: Laptops, Monitores, Licencias, Periféricos
+
+## 6. Siguiente decisión técnica
+
+Antes de empezar con tests automatizados, conviene validar manualmente la demo
+o definir si se incluirán tests unitarios para el próximo milestone.
